@@ -1,0 +1,5 @@
+{
+    "url": "https://httpbin.org/get?param1=ABC&param2=DEF",
+     "key2": "value2",
+     "key3": "value3"
+}

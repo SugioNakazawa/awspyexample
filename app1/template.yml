@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Lambda application sample. web api caller.
+Resources:
+  function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: func1.lambda_handler
+      Runtime: python3.8
+      CodeUri: ../src
+      Description: Call the AWS Lambda API
+      Timeout: 10
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+      Tracing: Active
+      Layers:
+        - !Ref libs
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: my-python-lib
+      Description: Dependencies for sample app.
+      ContentUri: ../package/.
+      CompatibleRuntimes:
+        - python3.8
