@@ -5,4 +5,4 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 FUNCTION=$(aws cloudformation describe-stack-resource --stack-name ${1}-stack --logical-resource-id function --query 'StackResourceDetail.PhysicalResourceId' --output text)
-aws lambda invoke --function-name $FUNCTION --payload file://${1}/event.json out.json
+aws lambda invoke --function-name $FUNCTION --payload file://conf/${1}/event.json out.json

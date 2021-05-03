@@ -11,6 +11,7 @@ pandas = "==1.2.4"
 autopep8 = "*"
 flake8 = "*"
 boto3 = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.8"

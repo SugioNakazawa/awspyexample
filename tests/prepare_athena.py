@@ -1,7 +1,12 @@
 import boto3
 import time
 
-bucket_name = 'com.nautilus-technologies.nakazawa.sample'
+from src.utils.config import get_config
+
+conf = get_config()
+print(conf.get('BUCKET_NAME'))
+
+bucket_name = 'bucket_name'
 db_name = 'dev_database'
 table_name = 'dev_table'
 athena_result = 'result'

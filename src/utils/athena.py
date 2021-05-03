@@ -64,6 +64,7 @@ def wait_for_done(query_execution_id):
 
 
 # start only test
+# DEBUGでこのモジュールを実行するため
 if (__name__ == '__main__'):
     import sys
     sys.path.append(os.path.join(os.path.dirname(__file__), '.'))

@@ -1,9 +1,9 @@
 # AWS Lambda sample for python
 Lambda 関数のサンプルを python で作成してみました。
 pandasを利用したs3からのcsv読み込み、Athenaからのデータ取得、webAPIコールを試しています。
-## 利用環境
-- macOS:11.2.3
-- AWS Lambda,S3,Athena,CloudFormation,CloudWatchLogs
+- 利用環境
+  - macOS:11.2.3
+  - AWS Lambda,S3,Athena,CloudFormation,CloudWatchLogs
 ## 事前準備
 - pipenv：pipenvでpython環境を構築しています。ipfile.lockから同一バージョンのパッケージをインストールします。
   - macの場合はbrewで
@@ -25,6 +25,8 @@ git clone git@github.com:SugioNakazawa/awspyexample.git
 ```shell
 cd awspyexample
 pipenv install
+# 開発用もインストール
+pipenv install --dev
 ```
 ### その他
 - aws-mfa：AWSアカウントがMFA認証の場合には便利。
@@ -43,54 +45,79 @@ IDEなどを用いてunittestが完了した後にAWS Lambda関数としての�
 ```
 Pipfile.lockからrequirements.txtを作成してpackage/pythonにインストールします。
 今回はpandasにてCライブラリを使用するためあらかじめ用意したpackage.tarを解凍して使用します。
+### Lambda 関数のの準備
+```shell
+3-build-function.sh [ハンドラ関数モジュール名]
+```
+ハンドラを定義したモジュールとutils配下をzipに圧縮します。
+モジュール名とデプロイ情報のディレクトリ名を同じにしておく必要があります。
 ### AWSへのデプロイ
 ```shell
-3-deploy.sh [関数の識別（app1やapp2）]
+4-deploy.sh [ハンドラ関数モジュール名]
 ```
 template.ymlによってAWSへのデプロイを行います。template.ymlを配置したディレクトリ（app1やapp2）を指定します。
 ### Lambda関数の実行
 ```shell
-4-invoke.sh  [関数の識別（app1やapp2）]
+5-invoke.sh  [ハンドラ関数モジュール名]
 ```
 event.jsonの内容を引数としてLambda関数を実行します。
-event.jsonを配置したディレクトリ（app1やapp2）を指定します。
+event.jsonを配置したディレクトリ（func1やfunc2）を指定します。
 ### リソースの削除
 ```shell
-5-cleanup.sh [関数の識別（app1やapp2）]
+6-cleanup.sh [ハンドラ関数モジュール名]
 ```
 AWSに登録したリソースを削除します。デプロイ時の引数にてスタックが作成されていますので削除時にも同じ引数を渡します。このコマンドにて最初に作成したS3バケットも削除します。
 
+## ガバレッジ
+Pipfileにてインストールしたcoverageを利用します。
+```shell
+# unittest実行
+coverage run --source src -m unittest discover -s tests/ -p "test_*.py"
+# レポート出力
+coverage report -m
+# XMLファイル作成
+coverage xml
+ ```
+vscodeでエディター上で確認するためにはCode Coverage Highlighterを利用します。
+shift+cmd+P で`> Code Coverage: Toggle coverage display`を選択します。
 ## プログラム構造
 Lambdaから呼ばれる関数はsrc直下のfunc1,func2...に定義します。各関数で共通利用するモジュールはsrc/utils配下に置き各関数から呼びます。
-AWS Lambdaへアップロードするソースはtemplate.ymlのCodeUrlで指定するsrc配下全てとなります。
-```
-このため各関数には使用されない他の関数もアップロードされてしまいますが実装する関数が少ないこととアップロード時のディレクトリ構造の変換を不要にするためこのような構造となっています。
-```
+AWS Lambdaへアップロードするソースは対象のハンドラを定義したモジュールとutils配下をzipファイルに圧縮します。template.ymlのCodeUrlではそのzipファイルを指定します。
 ### ソースツリー
 0-xxxxから5-xxxxはAWS CLIを利用してAWSへのデプロイと実行を行います。
 ```shell
 ├── 1-create-bucket.sh    # レイヤの格納先作成
-├── 2-build-layer.sh      # ビルド
-├── 3-deploy.sh           # awsへデプロイ
-├── 4-invoke.sh           # 実行
-├── 5-cleanup.sh          # アップしたリソースの全削除
+├── 2-build-layer.sh      # Layerビルド
+├── 3-build-function.sh   # Functionビルド
+├── 4-deploy.sh           # awsへデプロイ
+├── 5-invoke.sh           # 実行
+├── 6-cleanup.sh          # アップしたリソースの全削除
+├── build                 # ビルド、デプロイで作成される
+│   ├── bucket-name.txt   # s3に作成したバケット名
+│   └── package           # パッケージライブラリ
 ├── LICENSE               # ライセンスファイル（MIT）
 ├── Pipfile               # pipenvでinstallされたパッケージ
 ├── Pipfile.lock          # pipienvでinstallしたパッケージ・バージョン
 ├── README.md             # このドキュメント
-├── app1                  # 関数１のデプロイと実行情報
-│   ├── event.json        # 関数１の実行時引数
-│   └── template.yml      # 関数１のデプロイ用テンプレート
-├── app2                  # 関数２のデプロイと実行情報
-│   ├── event.json        # 関数２の実行時引数
-│   └── template.yml      # 関数２のデプロイ用テンプレート
-├── app3                  # 関数３のデプロイと実行情報
-│   ├── event.json        # 関数３の実行時引数
-│   └── template.yml      # 関数３のデプロイ用テンプレート
+├── conf                  # デプロイ、実行
+│   ├── func1             # func1の情報。名前はモジュール名とする
+│   │   ├── build         # ビルド時に作成される
+│   │   │   └── func.zip  # AWSへアップされるモジュール
+│   │   ├── event.json    # Lambda関数実行時の引数
+│   │   └── template.yml  # CloudFormationの設定
+│   ├── func2
+│   │   ├── build
+│   │   │   └── func.zip
+│   │   ├── event.json
+│   │   └── template.yml
+│   └── func3
+│       ├── build
+│       │   └── func.zip
+│       ├── event.json
+│       └── template.yml
 ├── package.tar           # Lambda Layerに配置する外部パッケージ
 ├── requirements.txt      # 標準形式のパッケージ情報（Pipfileから手動で生成）
 ├── src                   # ソースコード。Lambdaへ登録するディレクトリ
-│   ├── __init__.py
 │   ├── func1.py          # 関数１(webAPIの利用)モジュール
 │   ├── func2.py          # 関数２(S3csv→pandas)モジュール
 │   ├── func3.py          # 関数３(Athena→pandas)モジュール
