@@ -1,12 +1,13 @@
 import boto3
 import time
 
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 from src.utils.config import get_config
 
 conf = get_config()
-print(conf.get('BUCKET_NAME'))
-
-bucket_name = 'bucket_name'
+bucket_name = conf.get('BUCKET_NAME')
 db_name = 'dev_database'
 table_name = 'dev_table'
 athena_result = 'result'
@@ -66,7 +67,7 @@ def create_table():
 
 
 def upload_data():
-    upload_file = __file__.replace('create_athena.py', 'datas/weather.csv')
+    upload_file = __file__.replace('prepare_athena.py', 'datas/weather.csv')
     print(upload_file)
     s3.Object(bucket_name, table_name + '/weather.csv').upload_file(
         upload_file)
