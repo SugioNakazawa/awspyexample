@@ -8,7 +8,7 @@ from utils.logger import get_logger
 # 環境定数
 conf = get_config()
 # ロガー
-logger = get_logger(__name__, conf.get('LOG_LEVEL'))
+logger = get_logger('wfrpt', conf.get('LOG_LEVEL'))
 
 bucket_name = conf.get('bucket_name')
 s3 = boto3.resource('s3')
@@ -29,7 +29,9 @@ def execute(preffix):
     bucket = s3.Bucket(bucket_name)
     logger.debug('bucket name = ' + bucket.name)
     for obj in bucket.objects.all():
-        if (obj.key.startswith(preffix) and len(obj.key) > len(preffix)+1 and not obj.key.endswith('.out')):
+        if (obj.key.startswith(preffix)
+                and len(obj.key) > len(preffix) + 1
+                and not obj.key.endswith('.out')):
             logger.debug('read file = ' + obj.key)
             s3obj = s3.Object(bucket_name, obj.key)
             exec_file_pd(s3obj)

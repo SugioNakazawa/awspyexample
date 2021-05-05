@@ -1,8 +1,5 @@
-import boto3
-
 from utils.config import get_config
 from utils.logger import get_logger
-# from logging import getLogger,DEBUG,StreamHandler,Formatter
 from utils.athena import exec_athena
 
 # 環境定数
@@ -29,13 +26,13 @@ def lambda_handler(event, context):
 def exec(target_month):
     logger.info('target_month = {}'.format(target_month))
     # athenaテーブル:temtureからデータ取得
-    sql = 'select year,month,avg(min),avg(ave),avg(max) from dev_table where month='+target_month+' group by year,month order by year,month'
+    sql = 'select year,month,avg(min),avg(ave),avg(max) ' + \
+        'from dev_table where month=' + target_month + \
+        ' group by year,month order by year,month'
     logger.debug(sql)
     df = exec_athena(sql, conf)
     logger.debug(df)
     return df
-
-
 
 
 if (__name__ == '__main__'):

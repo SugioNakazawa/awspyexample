@@ -4,7 +4,7 @@ import time
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
-from utils.config import get_config
+from utils.config import get_config     # noqa: E402
 
 conf = get_config()
 bucket_name = conf.get('BUCKET_NAME')

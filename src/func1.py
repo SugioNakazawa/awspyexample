@@ -1,6 +1,4 @@
-from logging import getLogger, StreamHandler, DEBUG
 import requests
-from requests.models import parse_url
 
 from utils.config import get_config
 from utils.logger import get_logger
@@ -8,7 +6,7 @@ from utils.logger import get_logger
 # 環境定数
 conf = get_config()
 # ロガー
-logger = get_logger(__name__, conf.get('LOG_LEVEL'))
+logger = get_logger('wfrpt', conf.get('LOG_LEVEL'))
 
 
 def lambda_handler(event, context):
