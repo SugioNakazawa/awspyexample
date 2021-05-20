@@ -75,6 +75,17 @@ Pipfileにてインストールしたcoverageを利用します。
 coverage run --source src -m unittest discover -s tests/ -p "test_*.py"
 # レポート出力
 coverage report -m
+Name                    Stmts   Miss  Cover   Missing
+-----------------------------------------------------
+src/func1.py               17      2    88%   29-30
+src/func2.py               37      1    97%   60
+src/func3.py               21      3    86%   22-23, 39
+src/funcXXX.py             44     44     0%   1-73
+src/utils/__init__.py       0      0   100%
+src/utils/athena.py        45      8    82%   55-56, 61-62, 70-75
+src/utils/config.py        10      1    90%   19
+src/utils/logger.py        11      0   100%
+-----------------------------------------------------
 # XMLファイル作成
 coverage xml
  ```
