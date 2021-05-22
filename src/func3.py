@@ -1,39 +1,43 @@
 from utils.config import get_config
-from utils.logger import get_logger
-from utils.athena import exec_athena
+from utils.mylogger import MyLogger
+from src.utils.athenaaccess import AthenaAccess
 
-# 環境定数
+# 定数
 conf = get_config()
 # ロガー
-logger = get_logger('wfrpt', conf.get('LOG_LEVEL'))
-
-
-ATHENA_DB_NAME = conf.get('ATHENA_DB_NAME')
-ATHENA_RESULT_BUCKET = conf.get('ATHENA_RESULT_BUCKET')
-# ATHENA_PREFIX = conf.get('ATHENA_PREFIX')
-SQL_STR = 'select year,month,day,ave,max,min from dev_table'
-RETRY_COUNT = 300
+logger = MyLogger('wfrpt')
 
 
 def lambda_handler(event, context):
-    '''handler関数
-    引数のeventから対象月を取得。
-    '''
+    """eventから対象月を取得し対象データを取得。
+
+    Args:
+        event['target_month'](int): 対象月
+
+    Returns：
+        抽出データの件数(int)
+    """
     target_month = event['target_month']
-    exec(target_month)
+    df = exec(target_month)
+    return df.shape[0]
 
 
 def exec(target_month):
-    logger.info('target_month = {}'.format(target_month))
+    """athenaから対象月のデータを取得。
+
+    Args:
+        target_month: 対象月
+
+    Returns:
+        対象月のデータ(DataFrame)
+    """
+    logger.debug('target_month = {}'.format(target_month))
+    athena = AthenaAccess()
     # athenaテーブル:temtureからデータ取得
     sql = 'select year,month,avg(min),avg(ave),avg(max) ' + \
         'from dev_table where month=' + target_month + \
         ' group by year,month order by year,month'
-    logger.debug(sql)
-    df = exec_athena(sql, conf)
-    logger.debug(df)
+    logger.debug('sql = ' + sql)
+    df = athena.execute(sql)
+    logger.debug('data = ' + df)
     return df
-
-
-if (__name__ == '__main__'):
-    lambda_handler({'target_month': '1'}, '')

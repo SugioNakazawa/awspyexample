@@ -1,16 +1,23 @@
 import requests
 
 from utils.config import get_config
-from utils.logger import get_logger
+from utils.mylogger import MyLogger
 
-# 環境定数
+# 定数
 conf = get_config()
 # ロガー
-logger = get_logger('wfrpt', conf.get('LOG_LEVEL'))
+logger = MyLogger('wfrpt')
 
 
 def lambda_handler(event, context):
     """ lambda handler
+
+    Args:
+        event[url]: webAPIリクエスト先のURL
+    
+    Returns:
+        webAPIのレスポンス・コードが200の場合:レスポンス(json)
+        それ以外:response.status_code
 
     """
     target_url = event['url']
@@ -23,8 +30,3 @@ def lambda_handler(event, context):
         logger.error(response.status_code)
         # logger.error(response)
     return response.status_code
-
-
-if __name__ == "__main__":
-    target_url = conf.get('API_URL')
-    ret = lambda_handler({'url': target_url}, '')
