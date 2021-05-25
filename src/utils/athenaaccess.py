@@ -42,8 +42,8 @@ class AthenaAccess:
         data_file_name = f'{exec_run["QueryExecutionId"]}.csv'
         # S3から直接pandasへ
         s3 = boto3.resource('s3')
-        s3obj = s3.Object(conf.get('bucket_name'),
-                          self.data_prefix + '/' + data_file_name)
+        s3obj = s3.Object(
+            self.out_bucket, self.data_prefix + '/' + data_file_name)
         body_in = s3obj.get()['Body'].read().decode('utf-8')
         buffer_in = io.StringIO(body_in)
         df = pd.read_csv(buffer_in, lineterminator='\n', header=None)

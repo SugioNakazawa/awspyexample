@@ -4,8 +4,8 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 
-from src import func2
-from src.utils.config import get_config
+from src import func2  # noqa:E402
+from src.utils.config import get_config  # noqa:E402
 
 
 class TestFunc2(unittest.TestCase):
@@ -24,7 +24,7 @@ class TestFunc2(unittest.TestCase):
 
         # datakey/data1.csv をアップロード
         s3 = boto3.resource('s3')
-        upload_file = __file__.replace('test_func2.py','datas/data1.csv')
+        upload_file = __file__.replace('test_func2.py', 'datas/data1.csv')
         print(upload_file)
         s3.Object(TestFunc2.bucket_name, TestFunc2.csv_file_name).upload_file(
             upload_file)

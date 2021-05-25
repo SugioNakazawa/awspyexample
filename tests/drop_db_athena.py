@@ -6,11 +6,16 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 from utils.config import get_config     # noqa: E402
 
+
+"""athena db drop
+config.iniに従い、athena DB を削除します。
+"""
 conf = get_config()
 bucket_name = conf.get('BUCKET_NAME')
-db_name = 'dev_database'
+db_name = conf.get('ATHENA_DB_NAME')
+athena_result_bucket = conf.get('ATHENA_RESULT_BUCKET')
+athena_result_key = conf.get('ATHENA_RESULT_KEY')
 table_name = 'dev_table'
-athena_result = 'result'
 
 s3 = boto3.resource('s3')
 s3_client = boto3.client('s3')
@@ -24,7 +29,7 @@ def execute_athena(sql_str):
     queryid = client.start_query_execution(
         QueryString=sql_str,
         ResultConfiguration={
-            'OutputLocation': 's3://' + bucket_name + '/' + athena_result
+            'OutputLocation': 's3://' + athena_result_bucket + '/' + athena_result_key
         }
     )
     return queryid

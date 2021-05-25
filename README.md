@@ -135,10 +135,11 @@ AWS Lambdaへアップロードするソースは対象のハンドラを定義�
 │   ├── funcXXX.py
 │   └── utils
 │       ├── __init__.py
-│       ├── athena.py     # Athenaアクセスのヘルパー
+│       ├── athenaaccess.py # Athenaアクセス
 │       ├── config.ini    # 環境別定数定義
 │       ├── config.py     # 定数アクセスモジュール
-│       └── logger.py     # ログ設定
+│       ├── mylogger.py   # ログ設定
+│       └── s3util.py     # s3ユーティル
 └── tests                 # テストコード、テストデータ
     ├── datas             # テストデータ
     │   ├── data1.csv     # s3に配置するcsvデータ
@@ -154,16 +155,20 @@ AWS Lambdaへアップロードするソースは対象のハンドラを定義�
 pandasにはCライブラリが存在するため、AmazonLinux上でインストールしたライブラリが必要です。package.tarに圧縮してあります。
 新たなパッケージが必要な場合にはpipenv install [パッケージ]にてローカルテストを行います。デプロイする前にAmazonLinuxにてパッケージを作成してpackage.tarを再作成してください。
 
-以下は参考リンクです
-
-https://s10i.me/whitenote/post/46
-
 Dockerによるパッケージ作成
 ```shell
 cd python_module_builder
 docker container run --rm -v ${PWD}/python:/opt/python python_module_builder pandas
 ```
+参考リンク
+https://s10i.me/whitenote/post/46
 
+### MFA認証
+aws-mfaはこのプロジェクトのPipfileではインストールしていません。実行マシンにインストールしておくことをお勧めします。
 
-### 参考
-https://dev.classmethod.jp/articles/aws-lambda-dev-test-deploy-ci/
+参考 https://qiita.com/ogady/items/c17ffe8f7c8e15b15f77
+
+### 使い方
+```shell
+aws-mfa --profile [プロファイル名]
+```
