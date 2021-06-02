@@ -15,6 +15,8 @@ pandasを利用したs3からのcsv読み込み、Athenaからのデータ取得
     pip install pipenv
     ```
     pythonが入っていないと使えません、pythonをインストールしてから行ってください。
+- (Windows)Windowsでのpipenvのインストールは以下を参照。
+  https://qiita.com/Haaamaaaaa/items/a2852ed0b3e0b7c4d1ab
 - AWS CLI バージョン2：AWSへのデプロイ、実行で利用します。[AWSサイト](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2.html)
 - AWSアカウント：unittestでs3、Athenaにアクセスするために必要です。
 ### ソースコードのダウンロード
