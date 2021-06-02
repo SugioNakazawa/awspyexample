@@ -170,6 +170,13 @@ aws-mfaはこのプロジェクトのPipfileではインストールしていま
 
 参考 https://qiita.com/ogady/items/c17ffe8f7c8e15b15f77
 
+### MFA認証によるCodeCommitへのgitクライアントの接続
+とりあえず以下のコマンドでgitに設定を追加すれば接続できそう。
+```shell
+$ git config --local credential.helper '!aws codecommit credential-helper $@'
+$ git config --local credential.UseHttpPath true
+```
+
 ### 使い方
 ```shell
 aws-mfa --profile [プロファイル名]
