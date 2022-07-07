@@ -41,7 +41,8 @@ pipenv shell
 
 code .
 ```
-ダウンロードソースは特定のS3バケットにアクセスしてしまうのでsrc/utils/config.ini の MY_BUCKET 変数に利用する値を設定してください。
+ダウンロードソースは特定のS3バケットにアクセスしてしまうのでsrc/utils/config.ini の MY_BUCKET 変数の値(your-unique-number)を変更してしてください。
+
 ### テーブルの作成
 - src/tests/prepare_athena.py を実行することによりAthena DB、テーブルを作成します。バケットがない場合には上記に記載した バケット名+.ユーザ名 でバケットを作成します。
 - src/tests/drop_db_athena.py はAthenaDBを削除します。バケットは削除しません。
