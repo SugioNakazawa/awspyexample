@@ -14,16 +14,16 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(conf.get('NAME'), 'DEFAULT')
         self.assertEqual(
             conf.get('BUCKET_NAME'),
-            'com.nautilus-technologies.test.' + user)
+            'testdata.099622556658.ap-northeast-1.' + user)
         self.assertEqual(
             conf.get('ATHENA_DB_NAME'),
             'dev_database_' + user)
         self.assertEqual(
             conf.get('ATHENA_RESULT_BUCKET'),
-            'com.nautilus-technologies.test.' + user)
+            'testdata.099622556658.ap-northeast-1.' + user)
         self.assertEqual(
             conf.get('ATHENA_DATA_BUCKET'),
-            'com.nautilus-technologies.test.' + user)
+            'testdata.099622556658.ap-northeast-1.' + user)
 
     def test_getconfig_staging(self):
         os.environ['WFR_ENV'] = 'STAGING'
@@ -31,15 +31,15 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(conf.get('NAME'), 'STAGING')
         self.assertEqual(
             conf.get('BUCKET_NAME'),
-            'com.nautilus-technologies.test')
+            'testdata.099622556658.ap-northeast-1')
         self.assertEqual(
             conf.get('ATHENA_DB_NAME'), 'dev_database')
         self.assertEqual(
             conf.get('ATHENA_RESULT_BUCKET'),
-            'com.nautilus-technologies.test')
+            'testdata.099622556658.ap-northeast-1')
         self.assertEqual(
             conf.get('ATHENA_DATA_BUCKET'),
-            'com.nautilus-technologies.test')
+            'testdata.099622556658.ap-northeast-1')
 
     def test_getconfig_production(self):
         os.environ['WFR_ENV'] = 'PRODUCTION'
@@ -47,12 +47,12 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(conf.get('NAME'), 'PRODUCTION')
         self.assertEqual(
             conf.get('BUCKET_NAME'),
-            'com.nautilus-technologies.test')
+            'testdata.099622556658.ap-northeast-1')
         self.assertEqual(
             conf.get('ATHENA_DB_NAME'), 'dev_database')
         self.assertEqual(
             conf.get('ATHENA_RESULT_BUCKET'),
-            'com.nautilus-technologies.test')
+            'testdata.099622556658.ap-northeast-1')
         self.assertEqual(
             conf.get('ATHENA_DATA_BUCKET'),
-            'com.nautilus-technologies.test')
+            'testdata.099622556658.ap-northeast-1')
