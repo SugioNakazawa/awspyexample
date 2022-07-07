@@ -34,7 +34,21 @@ pipenv install --dev
 - aws-mfa：AWSアカウントがMFA認証の場合には便利。
 - vscode：コードの実装以外にもAWSへの接続が便利。
 
-## 実行手順
+## VSCODEでの実行
+プロジェクトのホームにてpipenvの仮想環境に入ってVSCODEを起動します。
+```shell
+pipenv shell
+
+code .
+```
+ダウンロードソースは特定のS3バケットにアクセスしてしまうのでsrc/utils/config.ini の MY_BUCKET 変数に利用する値を設定してください。
+### テーブルの作成
+- src/tests/prepare_athena.py を実行することによりAthena DB、テーブルを作成します。バケットがない場合には上記に記載した バケット名+.ユーザ名 でバケットを作成します。
+- src/tests/drop_db_athena.py はAthenaDBを削除します。バケットは削除しません。
+### テスト実行
+VSCODE のテストより実行を行い全てがOKになることを確認してください。
+
+## Lmbda実行手順
 IDEなどを用いてunittestが完了した後にAWS Lambda関数としてのテストをシェルにて実行します。
 ### リソース用S3バケットの作成
 ```shell
